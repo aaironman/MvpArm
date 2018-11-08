@@ -1,0 +1,66 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+    defaultConfig {
+        applicationId rootProject.applicationId
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        versionCode rootProject.versionCode
+        versionName rootProject.versionName
+        multiDexEnabled true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == 'com.android.support') {
+            if (!requested.name.startsWith("multidex")) {
+                details.useVersion rootProject.supportLibVersion
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    // android support libraries
+    implementation 'com.android.support:appcompat-v7:' + rootProject.supportLibVersion
+    implementation 'com.android.support:design:' + rootProject.supportLibVersion
+    //butterknife
+    implementation 'com.jakewharton:butterknife:' + rootProject.butterknifeLibVersion
+    annotationProcessor 'com.jakewharton:butterknife-compiler:' + rootProject.butterknifeLibVersion
+
+    //network
+    implementation 'com.squareup.retrofit2:retrofit:' + rootProject.retrofit2LibVersion
+    implementation 'com.squareup.retrofit2:converter-gson:' + rootProject.retrofit2LibVersion
+    implementation 'com.squareup.okhttp3:okhttp:' + rootProject.okhttp3LibVersion
+    implementation 'com.squareup.okhttp3:logging-interceptor:' + rootProject.okhttp3LibVersion
+
+    //gson
+    implementation 'com.google.code.gson:gson:' + rootProject.gsonLibVersion
+
+    //rxjava
+    implementation 'io.reactivex.rxjava2:rxjava:' + rootProject.rxjava2LibVersion
+    implementation 'io.reactivex.rxjava2:rxandroid:' + rootProject.rxandroid2LibVersion
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:' + rootProject.adapterRxjava2LibVersion
+
+    //权限申请
+    implementation 'com.tbruyelle.rxpermissions:rxpermissions:' + rootProject.rxpermissionsLibVersion
+    implementation 'com.android.support:multidex:' + rootProject.multidexLibVersion
+
+    implementation 'com.jude:swipebackhelper:' + rootProject.swipebackhelperLibVersion
+    compile 'in.srain.cube:ultra-ptr:' + rootProject.ptrLibVersion
+}
