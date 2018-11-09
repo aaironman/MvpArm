@@ -3,7 +3,6 @@ package com.ironman.mvparm;
 import com.ironman.mvparm.model.AppConfigResultModel;
 import com.ironman.mvparm.mvp.presenters.MvpRxPresenter;
 import com.ironman.mvparm.net.ExceptionHandle;
-import com.ironman.mvparm.utils.L;
 import com.ironman.mvparm.utils.RxUtils;
 
 import io.reactivex.Observer;
@@ -37,7 +36,6 @@ public class MainPresenter extends MvpRxPresenter<MainView> {
 			 @Override
 			 public void onError(Throwable e) {
 				 ExceptionHandle.ResponeThrowable responseThrowable = ExceptionHandle.handleException(e);
-				 L.v("mickey","---onError:" + responseThrowable.code);
 				 getView().getConfigError(responseThrowable.code,e.toString());
 				getView().hideProgress();
 			 }

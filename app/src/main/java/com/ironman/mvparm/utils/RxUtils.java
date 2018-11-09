@@ -27,7 +27,8 @@ public class RxUtils {
 		public ObservableSource apply(Observable upstream) {
 			//onErrorResumeNext当发生错误的时候，由另外一个Observable来代替当前的Observable并继续发射数据
 //			return (Observable<T>) upstream.map(new HandleFuc<T>()).onErrorResumeNext(new HttpResponseFunc<T>());
-			return (Observable<T>) upstream.onErrorResumeNext(new HttpResponseFunc<T>());
+//			return (Observable<T>) upstream.onErrorResumeNext(new HttpResponseFunc<T>());
+			return (Observable<T>) upstream.map(new HandleFuc()).onErrorResumeNext(new HttpResponseFunc<T>());
 		}
 	}
 
@@ -39,13 +40,35 @@ public class RxUtils {
 		}
 	}
 
-	public static class HandleFuc<T> implements Function<BaseResponse<T>, T> {
+//	public static class HandleFuc<T> implements Function<BaseResponse<T>, T> {
+//		@Override
+//		public T apply(BaseResponse<T> response) throws Exception {
+//			//response中code码为0 出现错误
+//			if (response.getResultCode() == 0)
+//				throw new ExceptionHandle.ServerException(response.getResultCode(),response.getMsg());
+//			return response.getData();
+//		}
+//	}
+
+//	public static class HandleFuc<T> implements Function<BaseResponse<T>, BaseResponse<T>> {
+//
+//		@Override
+//		public BaseResponse<T> apply(BaseResponse<T> tBaseResponse) throws Exception {
+//			if (tBaseResponse.getResultCode() == 0){
+//				throw new ExceptionHandle.ServerException(tBaseResponse.getResultCode(),tBaseResponse.getMsg());
+//			}
+//			return tBaseResponse;
+//		}
+//	}
+
+	public static class HandleFuc implements Function<BaseResponse<T>, BaseResponse<T>> {
+
 		@Override
-		public T apply(BaseResponse<T> response) throws Exception {
-			//response中code码为0 出现错误
-			if (response.getResultCode() == 0)
-				throw new ExceptionHandle.ServerException(response.getResultCode(),response.getMsg());
-			return response.getData();
+		public BaseResponse<T> apply(BaseResponse<T> tBaseResponse) throws Exception {
+			if (tBaseResponse.getResultCode() == 0){//这里只是个举例，code可能是其他错误码，例如会话过期需要重新登录，抛出异常,在异常处理中可以清除用户登录信息等
+				throw new ExceptionHandle.ServerException(tBaseResponse.getResultCode(),tBaseResponse.getMsg());
+			}
+			return tBaseResponse;
 		}
 	}
 

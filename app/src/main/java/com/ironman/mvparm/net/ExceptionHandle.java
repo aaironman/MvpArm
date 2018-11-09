@@ -3,7 +3,6 @@ package com.ironman.mvparm.net;
 import android.net.ParseException;
 
 import com.google.gson.JsonParseException;
-import com.ironman.mvparm.utils.L;
 
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
@@ -46,7 +45,7 @@ public class ExceptionHandle {
 //					ex.message = "网络错误";
 //					break;
 //			}
-			L.v("mickey","---ConnectException---code:" + ex.code);
+			ex.message = "网络错误";
 			return ex;
 		} else if (e instanceof ServerException) {
 			ServerException resultException = (ServerException) e;
@@ -80,7 +79,6 @@ public class ExceptionHandle {
 		} else {
 			ex = new ResponeThrowable(e, ERROR.UNKNOWN);
 			ex.message = "未知错误";
-			L.v("mickey","---UNKNOWN---code:" + ex.code);
 			return ex;
 		}
 	}
